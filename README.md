@@ -17,4 +17,5 @@ The following parameters are available:
 
 - `url`: The URL of your MOCO iCal subscription
 - `name` (optional): The title that the generated events will have; default: MOCO
-- `start` & `end` (optional): Start and end times. If not provided, the events will be marked as all-day
+- `start` & `end` (optional): Start and end times of events (GMT). If not provided, the events will be marked as all-day
+- `excludeWeekends` (optional): If set to true, no events will be created on weekends

@@ -37,15 +37,21 @@ export function handler(event, context, callback) {
                 d.isBefore(moment(dates[dates.length - 1].start), 'day');
                 d.add(1, 'days')
             ) {
-                if(blockedDates.indexOf(d.format('YYYY-MM-DD')) === -1) {
-                    builder.events.push({
-                        summary: params.name || 'MOCO',
-                        start: d.clone().set({hour: params.start || 0}).toDate(),
-                        end: d.clone().set({hour: params.end || 0}).toDate(),
-                        allDay: !params.start || !params.end,
-                        transp: 'OPAQUE'
-                    })
+                if(blockedDates.indexOf(d.format('YYYY-MM-DD')) > -1) {
+                    continue;
                 }
+
+                if(params.excludeWeekends && d.isoWeekday() > 5) {
+                    continue;
+                }
+
+                builder.events.push({
+                    summary: params.name || 'MOCO',
+                    start: d.clone().set({hour: params.start || 0}).toDate(),
+                    end: d.clone().set({hour: params.end || 0}).toDate(),
+                    allDay: !params.start || !params.end,
+                    transp: 'OPAQUE'
+                });
             }
         }
 

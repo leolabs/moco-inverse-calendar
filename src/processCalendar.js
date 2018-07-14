@@ -26,6 +26,7 @@ export function handler(event, context, callback) {
         }
 
         const dates = Object.values(data);
+        const blockedDates = dates.map(date => moment(date.start).format('YYYY-MM-DD'));
         const builder = icalToolkit.createIcsFileBuilder();
 
         builder.calname = 'MOCO Presence';
@@ -36,13 +37,15 @@ export function handler(event, context, callback) {
                 d.isBefore(moment(dates[dates.length - 1].start), 'day');
                 d.add(1, 'days')
             ) {
-                builder.events.push({
-                    summary: params.name || 'MOCO',
-                    start: d.clone().set({hour: params.start || 0}).toDate(),
-                    end: d.clone().set({hour: params.end || 0}).toDate(),
-                    allDay: !params.start || !params.end,
-                    transp: 'OPAQUE'
-                })
+                if(blockedDates.indexOf(d.format('YYYY-MM-DD')) === -1) {
+                    builder.events.push({
+                        summary: params.name || 'MOCO',
+                        start: d.clone().set({hour: params.start || 0}).toDate(),
+                        end: d.clone().set({hour: params.end || 0}).toDate(),
+                        allDay: !params.start || !params.end,
+                        transp: 'OPAQUE'
+                    })
+                }
             }
         }
 
